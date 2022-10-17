@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Threading;
 
 public class DotTaskScript : MonoBehaviour
 {
@@ -69,10 +70,35 @@ public class DotTaskScript : MonoBehaviour
     public List<int> TotalTrialsAvailable = new List<int>(); //create list
 
 
+    GameObject Dot1;
+    GameObject Dot2;
+    GameObject Dot3;
+    GameObject Dot4;
+    GameObject Dot5;
+    GameObject Dot6;
+    GameObject FixationCross;
+
 
     // Start is called before the first frame update
     void Start()
     {
+        Dot1 = GameObject.Find("Dot 1");
+        Dot2 = GameObject.Find("Dot 2");
+        Dot3 = GameObject.Find("Dot 3");
+        Dot4 = GameObject.Find("Dot 4");
+        Dot5 = GameObject.Find("Dot 5");
+        Dot6 = GameObject.Find("Dot 6");
+
+        FixationCross = GameObject.Find("Fixation Cross");
+
+        FixationCross.SetActive(false);
+        Dot1.SetActive(false);
+        Dot2.SetActive(false);
+        Dot3.SetActive(false);
+        Dot4.SetActive(false);
+        Dot5.SetActive(false);
+        Dot6.SetActive(false);
+
         Trials();
     }
     // Update is called once per frame
@@ -89,27 +115,27 @@ public class DotTaskScript : MonoBehaviour
                 TotalTrialsAvailable.Add(i);
                 ranNumber = Random.Range(0, TotalTrialsAvailable.Count); //selects a random value between 0 and total values in the list.
                 TrialsRan = TotalTrialsAvailable[ranNumber];   //Selects the corresponding value from the list. For example if the random number is 3, it takes the 3rd number from the list.
-                TotalTrialsAvailable.RemoveAt(ranNumber);//in that list rmemove random number
+                TotalTrialsAvailable.RemoveAt(ranNumber);//in that list remove random number
                 {
-                    if (TrialsRan >= 1 || TrialsRan < 13)
+                    if (TrialsRan >= 1 && TrialsRan < 13)
                     {
                         SelfConsistent();
-                        Debug.Log("Self-Consistent");
+                        
                     }
                     else if(TrialsRan >= 13 && TrialsRan < 25)
                     {
                         OtherConsistent();
-                        Debug.Log("Other-Consistent");
+                        
                     }
                     else if (TrialsRan >= 25 && TrialsRan < 37)
                     {
                         SelfInconsistent();
-                        Debug.Log("Self-Inconsistent");
+                        
                     }
                     else if (TrialsRan >= 37 && TrialsRan < 49)
                     {
                         OtherInconsistent();
-                        Debug.Log("Self-Inconsistent");
+                        
                     }
                     else if (TrialsRan >= 49 && TrialsRan < 53)
                     {
@@ -170,6 +196,24 @@ public class DotTaskScript : MonoBehaviour
 
         //show 0 with 0 dot - filler
 
+        Debug.Log("Self-Consistent");
+        int dots = Random.Range(1, 4);
+        if (dots == 1)
+        {
+            Dot1.SetActive(true);
+        }
+        else if (dots == 2)
+        {
+            Dot1.SetActive(true);
+            Dot2.SetActive(true);
+        }
+        else if (dots == 3)
+        {
+            Dot1.SetActive(true);
+            Dot2.SetActive(true);
+            Dot3.SetActive(true);
+        }
+
 
         TrialsRan++;//next iteration of enumerator
 
@@ -180,17 +224,66 @@ public class DotTaskScript : MonoBehaviour
         //show 1 with 1 dot
         //show 2 with 2 dot
         //show 3 with 3 dot
+        Debug.Log("Other-Consistent");
+        int dots = Random.Range(1, 4);
+        if (dots == 1)
+        {
+            Dot1.SetActive(true);
+        }
+        else if (dots == 2)
+        {
+            Dot1.SetActive(true);
+            Dot2.SetActive(true);
+        }
+        else if (dots == 3)
+        {
+            Dot1.SetActive(true);
+            Dot2.SetActive(true);
+            Dot3.SetActive(true);
+        }
     }
 
     //inconsistent is looking at opposite way of dots.
     //does the opposite wall they are not looking at have same number of dots as prompt
     public void SelfInconsistent()//is the self, looking opposite way to dots
     {
-
+        Debug.Log("Self-Inconsistent");
+        int dots = Random.Range(1, 4);
+        if (dots == 1)
+        {
+            Dot4.SetActive(true);
+        }
+        else if (dots == 2)
+        {
+            Dot5.SetActive(true);
+            Dot6.SetActive(true);
+        }
+        else if (dots == 3)
+        {
+            Dot4.SetActive(true);
+            Dot5.SetActive(true);
+            Dot6.SetActive(true);
+        }
     }
     public void OtherInconsistent()//is the other, looking opposite way to dots
     {
-
+        Debug.Log("Self-Inconsistent");
+        int dots = Random.Range(1, 4);
+        if (dots == 1)
+        {
+            Dot4.SetActive(true);
+        }
+        else if (dots == 2)
+        {
+            Dot5.SetActive(true);
+            Dot6.SetActive(true);
+        }
+        else if (dots == 3)
+        {
+            Dot4.SetActive(true);
+            Dot5.SetActive(true);
+            Dot6.SetActive(true);
+        }
     }
     public void RandomTrial()
     {
