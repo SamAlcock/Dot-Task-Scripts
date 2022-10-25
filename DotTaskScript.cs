@@ -189,14 +189,14 @@ public class DotTaskScript : MonoBehaviour
 
     public List<int> DotPicker(int dot_number_1, int dot_number_2, int dot_number_3, int niter)
     {
-        List<int> Picker = new () { dot_number_1, dot_number_2, dot_number_3 };
+        List<int> picker = new () { dot_number_1, dot_number_2, dot_number_3 };
         List<int> picked = new ();
 
         for(int i = 0; i < niter; i++)
         {
-            int dot = Random.Range(0, Picker.Count);
-            picked.Add(dot);
-            Picker.Remove(Picker[dot]);
+            int dot = Random.Range(1, picker.Count);
+            picked.Add(picker[dot]);
+            picker.Remove(picker[dot]);
         }
 
         return picked;
@@ -225,17 +225,17 @@ public class DotTaskScript : MonoBehaviour
     {
         for (int i = 0; i < niter; i++)
         {
-            if (dots_picked[i] == 1)
+            if (dots_picked[i] == 4)
             {
-                Dot1.SetActive(true);
+                Dot4.SetActive(true);
             }
-            else if (dots_picked[i] == 2)
+            else if (dots_picked[i] == 5)
             {
-                Dot2.SetActive(true);
+                Dot5.SetActive(true);
             }
-            else if (dots_picked[i] == 3)
+            else if (dots_picked[i] == 6)
             {
-                Dot3.SetActive(true);
+                Dot6.SetActive(true);
             }
         }
     }
@@ -248,22 +248,21 @@ public class DotTaskScript : MonoBehaviour
         if (dots == 1)
         {
             dots_picked = DotPicker(1, 2, 3, 1);
-
             SelfDotDisplay(dots_picked.Count);
+            Debug.Log("1 dot");    
         }
-        if (dots == 2)
+        else if (dots == 2)
         {
             dots_picked = DotPicker(1, 2, 3, 2);
-
             SelfDotDisplay(dots_picked.Count);
-
-            if (dots == 3)
-            {
-                Dot1.SetActive(true);
-                Dot2.SetActive(true);
-                Dot3.SetActive(true);
-            }
-
+            Debug.Log("2 dots");
+        }
+        else if (dots == 3)
+        {
+            Dot1.SetActive(true);
+            Dot2.SetActive(true);
+            Dot3.SetActive(true);
+            Debug.Log("3 dots");
         }
 
 
