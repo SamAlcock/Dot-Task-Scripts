@@ -1,8 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System.Threading;
-
 public class DotTaskScript : MonoBehaviour
 {
     /////////////////////general trial procedure (also found in word document)//////////////////////
@@ -69,6 +67,7 @@ public class DotTaskScript : MonoBehaviour
     public int TrialsRan = 0;
     public List<int> TotalTrialsAvailable = new List<int>(); //create list
 
+    List<int> dots_picked = new();
 
     GameObject Dot1;
     GameObject Dot2;
@@ -77,7 +76,6 @@ public class DotTaskScript : MonoBehaviour
     GameObject Dot5;
     GameObject Dot6;
     GameObject FixationCross;
-
 
     // Start is called before the first frame update
     void Start()
@@ -92,21 +90,16 @@ public class DotTaskScript : MonoBehaviour
         FixationCross = GameObject.Find("Fixation Cross");
 
         FixationCross.SetActive(false);
-        Dot1.SetActive(false);
-        Dot2.SetActive(false);
-        Dot3.SetActive(false);
-        Dot4.SetActive(false);
-        Dot5.SetActive(false);
-        Dot6.SetActive(false);
 
-        Trials();
+
+        StartCoroutine(Trials());
     }
     // Update is called once per frame
     void Update()
     {
         
     }
-    public void Trials() // changed IEnumerator to void (same with all trials)
+    public IEnumerator Trials() // changed IEnumerator to void (same with all trials)
     {
         for (int j = 1; j < TotalBlocks; j++)
         {
@@ -116,33 +109,40 @@ public class DotTaskScript : MonoBehaviour
                 ranNumber = Random.Range(0, TotalTrialsAvailable.Count); //selects a random value between 0 and total values in the list.
                 TrialsRan = TotalTrialsAvailable[ranNumber];   //Selects the corresponding value from the list. For example if the random number is 3, it takes the 3rd number from the list.
                 TotalTrialsAvailable.RemoveAt(ranNumber);//in that list remove random number
+
+                Dot1.SetActive(false);
+                Dot2.SetActive(false);
+                Dot3.SetActive(false);
+                Dot4.SetActive(false);
+                Dot5.SetActive(false);
+                Dot6.SetActive(false);
+
+                yield return new WaitForSeconds(1);
+
+                if (TrialsRan >= 1 && TrialsRan < 13)
                 {
-                    if (TrialsRan >= 1 && TrialsRan < 13)
-                    {
-                        SelfConsistent();
-                        
-                    }
-                    else if(TrialsRan >= 13 && TrialsRan < 25)
-                    {
-                        OtherConsistent();
-                        
-                    }
-                    else if (TrialsRan >= 25 && TrialsRan < 37)
-                    {
-                        SelfInconsistent();
-                        
-                    }
-                    else if (TrialsRan >= 37 && TrialsRan < 49)
-                    {
-                        OtherInconsistent();
-                        
-                    }
-                    else if (TrialsRan >= 49 && TrialsRan < 53)
-                    {
-                        RandomTrial();
-                        Debug.Log("Random Trial");
-                    }
+                    SelfConsistent();                       
                 }
+                else if(TrialsRan >= 13 && TrialsRan < 25)
+                {
+                    OtherConsistent();                     
+                }
+                else if (TrialsRan >= 25 && TrialsRan < 37)
+                {
+                    SelfInconsistent();              
+                }
+                else if (TrialsRan >= 37 && TrialsRan < 49)
+                {
+                    OtherInconsistent();             
+                }
+                else if (TrialsRan >= 49 && TrialsRan < 53)
+                {
+                    RandomTrial();
+                    Debug.Log("Random Trial");
+                }
+
+                yield return new WaitForSeconds(1);
+
             }
         } 
     }
@@ -187,31 +187,83 @@ public class DotTaskScript : MonoBehaviour
     //50% mismatching
     //only matching in analysis
 
+    public List<int> DotPicker(int dot_number_1, int dot_number_2, int dot_number_3, int niter)
+    {
+        List<int> Picker = new () { dot_number_1, dot_number_2, dot_number_3 };
+        List<int> picked = new ();
+
+        for(int i = 0; i < niter; i++)
+        {
+            int dot = Random.Range(0, Picker.Count);
+            picked.Add(dot);
+            Picker.Remove(Picker[dot]);
+        }
+
+        return picked;
+    }
+
+    public void SelfDotDisplay(int niter)
+    {
+        for (int i = 0; i < niter; i++)
+        {
+            if (dots_picked[i] == 1)
+            {
+                Dot1.SetActive(true);
+            }
+            else if (dots_picked[i] == 2)
+            {
+                Dot2.SetActive(true);
+            }
+            else if (dots_picked[i] == 3)
+            {
+                Dot3.SetActive(true);
+            }
+        }
+    }
+
+    public void OtherDotDisplay(int niter)
+    {
+        for (int i = 0; i < niter; i++)
+        {
+            if (dots_picked[i] == 1)
+            {
+                Dot1.SetActive(true);
+            }
+            else if (dots_picked[i] == 2)
+            {
+                Dot2.SetActive(true);
+            }
+            else if (dots_picked[i] == 3)
+            {
+                Dot3.SetActive(true);
+            }
+        }
+    }
 
     public void SelfConsistent()//is the self, looking same way as dots
     {
-
-
-
-
         //show 0 with 0 dot - filler
-
         Debug.Log("Self-Consistent");
         int dots = Random.Range(1, 4);
         if (dots == 1)
         {
-            Dot1.SetActive(true);
+            dots_picked = DotPicker(1, 2, 3, 1);
+
+            SelfDotDisplay(dots_picked.Count);
         }
-        else if (dots == 2)
+        if (dots == 2)
         {
-            Dot1.SetActive(true);
-            Dot2.SetActive(true);
-        }
-        else if (dots == 3)
-        {
-            Dot1.SetActive(true);
-            Dot2.SetActive(true);
-            Dot3.SetActive(true);
+            dots_picked = DotPicker(1, 2, 3, 2);
+
+            SelfDotDisplay(dots_picked.Count);
+
+            if (dots == 3)
+            {
+                Dot1.SetActive(true);
+                Dot2.SetActive(true);
+                Dot3.SetActive(true);
+            }
+
         }
 
 
@@ -229,6 +281,7 @@ public class DotTaskScript : MonoBehaviour
         if (dots == 1)
         {
             Dot1.SetActive(true);
+
         }
         else if (dots == 2)
         {
