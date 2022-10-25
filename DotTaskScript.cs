@@ -189,12 +189,13 @@ public class DotTaskScript : MonoBehaviour
 
     public List<int> DotPicker(int dot_number_1, int dot_number_2, int dot_number_3, int niter)
     {
+        dots_picked.Clear();
         List<int> picker = new () { dot_number_1, dot_number_2, dot_number_3 };
         List<int> picked = new ();
 
         for(int i = 0; i < niter; i++)
         {
-            int dot = Random.Range(1, picker.Count);
+            int dot = Random.Range(0, picker.Count);
             picked.Add(picker[dot]);
             picker.Remove(picker[dot]);
         }
@@ -248,18 +249,21 @@ public class DotTaskScript : MonoBehaviour
         if (dots == 1)
         {
             dots_picked = DotPicker(1, 2, 3, 1);
-            ConDotDisplay(dots_picked.Count); 
+            ConDotDisplay(dots_picked.Count);
+            Debug.Log("1 dot");
         }
         else if (dots == 2)
         {
             dots_picked = DotPicker(1, 2, 3, 2);
             ConDotDisplay(dots_picked.Count);
+            Debug.Log("2 dots");
         }
         else if (dots == 3)
         {
             Dot1.SetActive(true);
             Dot2.SetActive(true);
             Dot3.SetActive(true);
+            Debug.Log("3 dots");
         }
 
 
@@ -276,19 +280,22 @@ public class DotTaskScript : MonoBehaviour
         int dots = Random.Range(1, 4);
         if (dots == 1)
         {
-            Dot1.SetActive(true);
-
+            dots_picked = DotPicker(1, 2, 3, 1);
+            ConDotDisplay(dots_picked.Count);
+            Debug.Log("1 dot");
         }
         else if (dots == 2)
         {
-            Dot1.SetActive(true);
-            Dot2.SetActive(true);
+            dots_picked = DotPicker(1, 2, 3, 2);
+            ConDotDisplay(dots_picked.Count);
+            Debug.Log("2 dots");
         }
         else if (dots == 3)
         {
             Dot1.SetActive(true);
             Dot2.SetActive(true);
             Dot3.SetActive(true);
+            Debug.Log("3 dots");
         }
     }
 
@@ -300,38 +307,46 @@ public class DotTaskScript : MonoBehaviour
         int dots = Random.Range(1, 4);
         if (dots == 1)
         {
-            Dot4.SetActive(true);
+            dots_picked = DotPicker(4, 5, 6, 1);
+            ConDotDisplay(dots_picked.Count);
+            Debug.Log("1 dot");
         }
         else if (dots == 2)
         {
-            Dot5.SetActive(true);
-            Dot6.SetActive(true);
+            dots_picked = DotPicker(4, 5, 6, 2);
+            ConDotDisplay(dots_picked.Count);
+            Debug.Log("2 dots");
         }
         else if (dots == 3)
         {
             Dot4.SetActive(true);
             Dot5.SetActive(true);
             Dot6.SetActive(true);
+            Debug.Log("3 dots");
         }
     }
     public void OtherInconsistent()//is the other, looking opposite way to dots
     {
-        Debug.Log("Self-Inconsistent");
+        Debug.Log("Other-Inconsistent");
         int dots = Random.Range(1, 4);
         if (dots == 1)
         {
-            Dot4.SetActive(true);
+            dots_picked = DotPicker(4, 5, 6, 1);
+            InconDotDisplay(dots_picked.Count);
+            Debug.Log("1 dot");
         }
         else if (dots == 2)
         {
-            Dot5.SetActive(true);
-            Dot6.SetActive(true);
+            dots_picked = DotPicker(4, 5, 6, 2);
+            InconDotDisplay(dots_picked.Count);
+            Debug.Log("2 dots");
         }
         else if (dots == 3)
         {
             Dot4.SetActive(true);
             Dot5.SetActive(true);
             Dot6.SetActive(true);
+            Debug.Log("3 dots");
         }
     }
     public void RandomTrial()
