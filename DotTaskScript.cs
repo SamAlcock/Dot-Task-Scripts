@@ -202,7 +202,7 @@ public class DotTaskScript : MonoBehaviour
         return picked;
     }
 
-    public void SelfDotDisplay(int niter)
+    public void ConDotDisplay(int niter)
     {
         for (int i = 0; i < niter; i++)
         {
@@ -221,7 +221,7 @@ public class DotTaskScript : MonoBehaviour
         }
     }
 
-    public void OtherDotDisplay(int niter)
+    public void InconDotDisplay(int niter)
     {
         for (int i = 0; i < niter; i++)
         {
@@ -248,21 +248,18 @@ public class DotTaskScript : MonoBehaviour
         if (dots == 1)
         {
             dots_picked = DotPicker(1, 2, 3, 1);
-            SelfDotDisplay(dots_picked.Count);
-            Debug.Log("1 dot");    
+            ConDotDisplay(dots_picked.Count); 
         }
         else if (dots == 2)
         {
             dots_picked = DotPicker(1, 2, 3, 2);
-            SelfDotDisplay(dots_picked.Count);
-            Debug.Log("2 dots");
+            ConDotDisplay(dots_picked.Count);
         }
         else if (dots == 3)
         {
             Dot1.SetActive(true);
             Dot2.SetActive(true);
             Dot3.SetActive(true);
-            Debug.Log("3 dots");
         }
 
 
