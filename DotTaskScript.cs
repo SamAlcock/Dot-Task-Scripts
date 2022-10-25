@@ -308,13 +308,13 @@ public class DotTaskScript : MonoBehaviour
         if (dots == 1)
         {
             dots_picked = DotPicker(4, 5, 6, 1);
-            ConDotDisplay(dots_picked.Count);
+            InconDotDisplay(dots_picked.Count);
             Debug.Log("1 dot");
         }
         else if (dots == 2)
         {
             dots_picked = DotPicker(4, 5, 6, 2);
-            ConDotDisplay(dots_picked.Count);
+            InconDotDisplay(dots_picked.Count);
             Debug.Log("2 dots");
         }
         else if (dots == 3)
