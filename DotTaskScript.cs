@@ -117,7 +117,7 @@ public class DotTaskScript : MonoBehaviour
                 Dot5.SetActive(false);
                 Dot6.SetActive(false);
 
-                yield return new WaitForSeconds(1);
+                yield return new WaitForSeconds(0.05f);
 
                 if (TrialsRan >= 1 && TrialsRan < 13)
                 {
@@ -137,11 +137,12 @@ public class DotTaskScript : MonoBehaviour
                 }
                 else if (TrialsRan >= 49 && TrialsRan < 53)
                 {
-                    RandomTrial();
                     Debug.Log("Random Trial");
+                    RandomTrial();
+                    
                 }
 
-                yield return new WaitForSeconds(1);
+                yield return new WaitForSeconds(0.05f);
 
             }
         } 
@@ -250,20 +251,17 @@ public class DotTaskScript : MonoBehaviour
         {
             dots_picked = DotPicker(1, 2, 3, 1);
             ConDotDisplay(dots_picked.Count);
-            Debug.Log("1 dot");
         }
         else if (dots == 2)
         {
             dots_picked = DotPicker(1, 2, 3, 2);
             ConDotDisplay(dots_picked.Count);
-            Debug.Log("2 dots");
         }
         else if (dots == 3)
         {
             Dot1.SetActive(true);
             Dot2.SetActive(true);
             Dot3.SetActive(true);
-            Debug.Log("3 dots");
         }
 
 
@@ -282,20 +280,17 @@ public class DotTaskScript : MonoBehaviour
         {
             dots_picked = DotPicker(1, 2, 3, 1);
             ConDotDisplay(dots_picked.Count);
-            Debug.Log("1 dot");
         }
         else if (dots == 2)
         {
             dots_picked = DotPicker(1, 2, 3, 2);
             ConDotDisplay(dots_picked.Count);
-            Debug.Log("2 dots");
         }
         else if (dots == 3)
         {
             Dot1.SetActive(true);
             Dot2.SetActive(true);
             Dot3.SetActive(true);
-            Debug.Log("3 dots");
         }
     }
 
@@ -309,20 +304,17 @@ public class DotTaskScript : MonoBehaviour
         {
             dots_picked = DotPicker(4, 5, 6, 1);
             InconDotDisplay(dots_picked.Count);
-            Debug.Log("1 dot");
         }
         else if (dots == 2)
         {
             dots_picked = DotPicker(4, 5, 6, 2);
             InconDotDisplay(dots_picked.Count);
-            Debug.Log("2 dots");
         }
         else if (dots == 3)
         {
             Dot4.SetActive(true);
             Dot5.SetActive(true);
             Dot6.SetActive(true);
-            Debug.Log("3 dots");
         }
     }
     public void OtherInconsistent()//is the other, looking opposite way to dots
@@ -333,24 +325,38 @@ public class DotTaskScript : MonoBehaviour
         {
             dots_picked = DotPicker(4, 5, 6, 1);
             InconDotDisplay(dots_picked.Count);
-            Debug.Log("1 dot");
         }
         else if (dots == 2)
         {
             dots_picked = DotPicker(4, 5, 6, 2);
             InconDotDisplay(dots_picked.Count);
-            Debug.Log("2 dots");
         }
         else if (dots == 3)
         {
             Dot4.SetActive(true);
             Dot5.SetActive(true);
             Dot6.SetActive(true);
-            Debug.Log("3 dots");
         }
     }
     public void RandomTrial()
     {
+        int trial = Random.Range(0, 4);
 
+        if (trial == 0)
+        {
+            SelfConsistent();
+        }
+        else if (trial == 1)
+        {
+            SelfInconsistent();
+        }
+        else if (trial == 2)
+        {
+            OtherConsistent();
+        }
+        else if (trial == 3)
+        {
+            OtherInconsistent();
+        }
     }
 }
