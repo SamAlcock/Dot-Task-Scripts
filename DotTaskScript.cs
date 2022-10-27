@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 public class DotTaskScript : MonoBehaviour
 {
     /////////////////////general trial procedure (also found in word document)//////////////////////
@@ -76,6 +77,7 @@ public class DotTaskScript : MonoBehaviour
     GameObject Dot5;
     GameObject Dot6;
     GameObject FixationCross;
+    public GameObject TextNumber;
 
     // Start is called before the first frame update
     void Start()
@@ -89,8 +91,9 @@ public class DotTaskScript : MonoBehaviour
 
         FixationCross = GameObject.Find("Fixation Cross");
 
-        FixationCross.SetActive(false);
+        TextNumber = GameObject.Find("Text");
 
+        FixationCross.SetActive(false);
 
         StartCoroutine(Trials());
     }
@@ -99,12 +102,16 @@ public class DotTaskScript : MonoBehaviour
     {
         
     }
-    public IEnumerator Trials() // changed IEnumerator to void (same with all trials)
+    public IEnumerator Trials()
     {
         for (int j = 1; j < TotalBlocks; j++)
         {
             for (int i = 1; i < TotalTrials; i++)
             {
+                TextNumber.SetActive(true);
+
+                TextNumber.GetComponent<TextMeshPro>().text = Random.Range(0, 4).ToString();
+
                 TotalTrialsAvailable.Add(i);
                 ranNumber = Random.Range(0, TotalTrialsAvailable.Count); //selects a random value between 0 and total values in the list.
                 TrialsRan = TotalTrialsAvailable[ranNumber];   //Selects the corresponding value from the list. For example if the random number is 3, it takes the 3rd number from the list.
@@ -117,7 +124,9 @@ public class DotTaskScript : MonoBehaviour
                 Dot5.SetActive(false);
                 Dot6.SetActive(false);
 
-                yield return new WaitForSeconds(0.05f);
+                yield return new WaitForSeconds(2f);
+
+                TextNumber.SetActive(false);
 
                 if (TrialsRan >= 1 && TrialsRan < 13)
                 {
@@ -142,7 +151,7 @@ public class DotTaskScript : MonoBehaviour
                     
                 }
 
-                yield return new WaitForSeconds(0.05f);
+                yield return new WaitForSeconds(1f);
 
             }
         } 
