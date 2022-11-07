@@ -108,14 +108,13 @@ public class DotTaskScript : MonoBehaviour
         {
             for (int i = 1; i < TotalTrials; i++)
             {
-                TextNumber.SetActive(true);
-
-                TextNumber.GetComponent<TextMeshPro>().text = Random.Range(0, 4).ToString();
 
                 TotalTrialsAvailable.Add(i);
                 ranNumber = Random.Range(0, TotalTrialsAvailable.Count); //selects a random value between 0 and total values in the list.
                 TrialsRan = TotalTrialsAvailable[ranNumber];   //Selects the corresponding value from the list. For example if the random number is 3, it takes the 3rd number from the list.
                 TotalTrialsAvailable.RemoveAt(ranNumber);//in that list remove random number
+
+                yield return new WaitForSeconds(2f);
 
                 Dot1.SetActive(false);
                 Dot2.SetActive(false);
@@ -123,10 +122,6 @@ public class DotTaskScript : MonoBehaviour
                 Dot4.SetActive(false);
                 Dot5.SetActive(false);
                 Dot6.SetActive(false);
-
-                yield return new WaitForSeconds(2f);
-
-                TextNumber.SetActive(false);
 
                 if (TrialsRan >= 1 && TrialsRan < 13)
                 {
@@ -155,6 +150,37 @@ public class DotTaskScript : MonoBehaviour
 
             }
         } 
+    }
+
+    IEnumerator PickNumber(bool consistent, int dots) // Decides what number to display
+    {
+        yield return new WaitForSeconds(0.75f);
+        if (consistent) // if trial is consistent, display correct number
+        {
+            TextNumber.GetComponent<TextMeshPro>().text = dots.ToString();
+        }
+        else // else trial is inconsistent, display a random number
+        {
+            TextNumber.GetComponent<TextMeshPro>().text = Random.Range(0, 4).ToString();
+        }
+        TextNumber.SetActive(true); // Display number, wait, then hide it
+        yield return new WaitForSeconds(0.75f);
+        TextNumber.SetActive(false);
+    }
+
+    IEnumerator DisplayPerspective(bool self)
+    {
+        if (self)
+        {
+            TextNumber.GetComponent<TextMeshPro>().text = "Self";
+        }
+        else
+        {
+            TextNumber.GetComponent<TextMeshPro>().text = "Other";
+        }
+        TextNumber.SetActive(true); 
+        yield return new WaitForSeconds(0.75f);
+        TextNumber.SetActive(false);
     }
 
 
@@ -197,7 +223,7 @@ public class DotTaskScript : MonoBehaviour
     //50% mismatching
     //only matching in analysis
 
-    public List<int> DotPicker(int dot_number_1, int dot_number_2, int dot_number_3, int niter)
+    public List<int> DotPicker(int dot_number_1, int dot_number_2, int dot_number_3, int niter) 
     {
         dots_picked.Clear();
         List<int> picker = new () { dot_number_1, dot_number_2, dot_number_3 };
@@ -254,8 +280,12 @@ public class DotTaskScript : MonoBehaviour
     public void SelfConsistent()//is the self, looking same way as dots
     {
         //show 0 with 0 dot - filler
+        bool consistent = true;
+        bool self = true;
         Debug.Log("Self-Consistent");
         int dots = Random.Range(1, 4);
+        StartCoroutine(DisplayPerspective(self));
+        StartCoroutine(PickNumber(consistent, dots));
         if (dots == 1)
         {
             dots_picked = DotPicker(1, 2, 3, 1);
@@ -283,8 +313,13 @@ public class DotTaskScript : MonoBehaviour
         //show 1 with 1 dot
         //show 2 with 2 dot
         //show 3 with 3 dot
+        bool consistent = true;
+        bool self = false;
+
         Debug.Log("Other-Consistent");
         int dots = Random.Range(1, 4);
+        StartCoroutine(DisplayPerspective(self));
+        StartCoroutine(PickNumber(consistent, dots));
         if (dots == 1)
         {
             dots_picked = DotPicker(1, 2, 3, 1);
@@ -308,7 +343,11 @@ public class DotTaskScript : MonoBehaviour
     public void SelfInconsistent()//is the self, looking opposite way to dots
     {
         Debug.Log("Self-Inconsistent");
+        bool consistent = false;
+        bool self = true;
         int dots = Random.Range(1, 4);
+        StartCoroutine(DisplayPerspective(self));
+        StartCoroutine(PickNumber(consistent, dots));
         if (dots == 1)
         {
             dots_picked = DotPicker(4, 5, 6, 1);
@@ -329,7 +368,11 @@ public class DotTaskScript : MonoBehaviour
     public void OtherInconsistent()//is the other, looking opposite way to dots
     {
         Debug.Log("Other-Inconsistent");
+        bool consistent = false;
+        bool self = false;
         int dots = Random.Range(1, 4);
+        StartCoroutine(DisplayPerspective(self));
+        StartCoroutine(PickNumber(consistent, dots));
         if (dots == 1)
         {
             dots_picked = DotPicker(4, 5, 6, 1);
