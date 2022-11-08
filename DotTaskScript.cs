@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
 public class DotTaskScript : MonoBehaviour
 {
     /////////////////////general trial procedure (also found in word document)//////////////////////
@@ -78,6 +79,8 @@ public class DotTaskScript : MonoBehaviour
     GameObject Dot6;
     GameObject FixationCross;
     public GameObject TextNumber;
+    GameObject YesButton;
+    GameObject NoButton;
 
     // Start is called before the first frame update
     void Start()
@@ -93,6 +96,15 @@ public class DotTaskScript : MonoBehaviour
 
         TextNumber = GameObject.Find("Text");
 
+        YesButton = GameObject.Find("Yes Button");
+        NoButton = GameObject.Find("No Button");
+
+        Button btn_y = YesButton.GetComponent<Button>();
+        Button btn_n = NoButton.GetComponent<Button>();
+
+        btn_y.onClick.AddListener(YesClick);
+        btn_n.onClick.AddListener(NoClick);
+
         FixationCross.SetActive(false);
 
         StartCoroutine(Trials());
@@ -101,6 +113,15 @@ public class DotTaskScript : MonoBehaviour
     void Update()
     {
         
+    }
+
+    void YesClick()
+    {
+        Debug.Log("You clicked yes!");
+    }
+    void NoClick()
+    {
+        Debug.Log("You clicked no!");
     }
     public IEnumerator Trials()
     {
