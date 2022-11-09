@@ -59,9 +59,6 @@ public class DotTaskScript : MonoBehaviour
 
     //can ignore for the time being.
 
-
-
-
     public float TotalTrials = 104f;
     public float TotalBlocks = 2f;
 
@@ -69,7 +66,13 @@ public class DotTaskScript : MonoBehaviour
     public int TrialsRan = 0;
     public List<int> TotalTrialsAvailable = new List<int>(); //create list
 
+    bool YesClicked = false;
+    bool NoClicked = false;
+
     List<int> dots_picked = new();
+
+    int number;
+    int correct;
 
     GameObject Dot1;
     GameObject Dot2;
@@ -79,6 +82,7 @@ public class DotTaskScript : MonoBehaviour
     GameObject Dot6;
     GameObject FixationCross;
     public GameObject TextNumber;
+    GameObject TextPerspective;
     GameObject YesButton;
     GameObject NoButton;
 
@@ -95,6 +99,7 @@ public class DotTaskScript : MonoBehaviour
         FixationCross = GameObject.Find("Fixation Cross");
 
         TextNumber = GameObject.Find("Text");
+        TextPerspective = GameObject.Find("Perspective Text");
 
         YesButton = GameObject.Find("Yes Button");
         NoButton = GameObject.Find("No Button");
@@ -105,7 +110,7 @@ public class DotTaskScript : MonoBehaviour
         btn_y.onClick.AddListener(YesClick);
         btn_n.onClick.AddListener(NoClick);
 
-        FixationCross.SetActive(false);
+        
 
         StartCoroutine(Trials());
     }
@@ -117,14 +122,44 @@ public class DotTaskScript : MonoBehaviour
 
     void YesClick()
     {
-        Debug.Log("You clicked yes!");
+        YesClicked = true;
+        YesButton.SetActive(false);
+        NoButton.SetActive(false);
     }
     void NoClick()
     {
-        Debug.Log("You clicked no!");
+        NoClicked = true;
+        YesButton.SetActive(false);
+        NoButton.SetActive(false);
+    }
+    void CheckCorrect(int dots)
+    {
+        Debug.Log("Dots: " + dots + ", Number: " + number);
+        if(YesClicked && NoClicked) // May be pointless now as buttons dissappear on click, need to put it at bottom of if statement
+        {
+            Debug.Log("Both buttons clicked, user is incorrect");
+        }
+        else if(YesClicked && dots == number)
+        {
+            correct++;  
+        }
+        else if(NoClicked && dots != number)
+        {
+            correct++; 
+        }
+        YesClicked = false;
+        NoClicked = false;
+        Debug.Log("You have got " + correct + " correct!");
     }
     public IEnumerator Trials()
     {
+        FixationCross.SetActive(true);
+
+        yield return new WaitForSeconds(0.75f);
+
+        FixationCross.SetActive(false);
+
+
         for (int j = 1; j < TotalBlocks; j++)
         {
             for (int i = 1; i < TotalTrials; i++)
@@ -144,20 +179,40 @@ public class DotTaskScript : MonoBehaviour
                 Dot5.SetActive(false);
                 Dot6.SetActive(false);
 
+                YesButton.SetActive(false);
+                NoButton.SetActive(false);
+
                 if (TrialsRan >= 1 && TrialsRan < 13)
                 {
+                    if (TrialsRan == 1) // Temporary code for console
+                    {
+                        Debug.Log("Self Consistent");
+                    }
+
                     SelfConsistent();                       
                 }
                 else if(TrialsRan >= 13 && TrialsRan < 25)
                 {
+                    if (TrialsRan == 13) // Temporary code for console
+                    {
+                        Debug.Log("Other Consistent");
+                    }
                     OtherConsistent();                     
                 }
                 else if (TrialsRan >= 25 && TrialsRan < 37)
                 {
+                    if (TrialsRan == 25) // Temporary code for console
+                    {
+                        Debug.Log("Self Inconsistent");
+                    }
                     SelfInconsistent();              
                 }
                 else if (TrialsRan >= 37 && TrialsRan < 49)
                 {
+                    if (TrialsRan == 37) // Temporary code for console
+                    {
+                        Debug.Log("Other Inconsistent");
+                    }
                     OtherInconsistent();             
                 }
                 else if (TrialsRan >= 49 && TrialsRan < 53)
@@ -169,39 +224,48 @@ public class DotTaskScript : MonoBehaviour
 
                 yield return new WaitForSeconds(1f);
 
+                YesButton.SetActive(true);
+                NoButton.SetActive(true);
+
+                yield return new WaitForSeconds(2f);
+
             }
         } 
     }
 
     IEnumerator PickNumber(bool consistent, int dots) // Decides what number to display
     {
-        yield return new WaitForSeconds(0.75f);
         if (consistent) // if trial is consistent, display correct number
         {
+            number = dots;
             TextNumber.GetComponent<TextMeshPro>().text = dots.ToString();
         }
         else // else trial is inconsistent, display a random number
         {
-            TextNumber.GetComponent<TextMeshPro>().text = Random.Range(0, 4).ToString();
+            number = Random.Range(0, 4);
+            TextNumber.GetComponent<TextMeshPro>().text = number.ToString();
         }
+        yield return new WaitForSeconds(0.95f);
         TextNumber.SetActive(true); // Display number, wait, then hide it
         yield return new WaitForSeconds(0.75f);
         TextNumber.SetActive(false);
+
     }
 
     IEnumerator DisplayPerspective(bool self)
     {
         if (self)
         {
-            TextNumber.GetComponent<TextMeshPro>().text = "Self";
+            TextPerspective.GetComponent<TextMeshPro>().text = "Self";
         }
         else
         {
-            TextNumber.GetComponent<TextMeshPro>().text = "Other";
+            TextPerspective.GetComponent<TextMeshPro>().text = "Other";
         }
-        TextNumber.SetActive(true); 
+        TextPerspective.SetActive(true); 
         yield return new WaitForSeconds(0.75f);
-        TextNumber.SetActive(false);
+        TextPerspective.SetActive(false);
+
     }
 
 
@@ -303,18 +367,18 @@ public class DotTaskScript : MonoBehaviour
         //show 0 with 0 dot - filler
         bool consistent = true;
         bool self = true;
-        Debug.Log("Self-Consistent");
         int dots = Random.Range(1, 4);
         StartCoroutine(DisplayPerspective(self));
         StartCoroutine(PickNumber(consistent, dots));
+
         if (dots == 1)
         {
-            dots_picked = DotPicker(1, 2, 3, 1);
+            dots_picked = DotPicker(1, 2, 3, 1); // Pick 1 dot out of dots 1, 2 and 3
             ConDotDisplay(dots_picked.Count);
         }
         else if (dots == 2)
         {
-            dots_picked = DotPicker(1, 2, 3, 2);
+            dots_picked = DotPicker(1, 2, 3, 2); // Pick 2 dots out of dots 1, 2, and 3
             ConDotDisplay(dots_picked.Count);
         }
         else if (dots == 3)
@@ -323,7 +387,7 @@ public class DotTaskScript : MonoBehaviour
             Dot2.SetActive(true);
             Dot3.SetActive(true);
         }
-
+        CheckCorrect(dots);
 
         TrialsRan++;//next iteration of enumerator
 
@@ -337,7 +401,6 @@ public class DotTaskScript : MonoBehaviour
         bool consistent = true;
         bool self = false;
 
-        Debug.Log("Other-Consistent");
         int dots = Random.Range(1, 4);
         StartCoroutine(DisplayPerspective(self));
         StartCoroutine(PickNumber(consistent, dots));
@@ -357,13 +420,13 @@ public class DotTaskScript : MonoBehaviour
             Dot2.SetActive(true);
             Dot3.SetActive(true);
         }
+        CheckCorrect(dots);
     }
 
     //inconsistent is looking at opposite way of dots.
     //does the opposite wall they are not looking at have same number of dots as prompt
     public void SelfInconsistent()//is the self, looking opposite way to dots
     {
-        Debug.Log("Self-Inconsistent");
         bool consistent = false;
         bool self = true;
         int dots = Random.Range(1, 4);
@@ -385,10 +448,10 @@ public class DotTaskScript : MonoBehaviour
             Dot5.SetActive(true);
             Dot6.SetActive(true);
         }
+        CheckCorrect(dots);
     }
     public void OtherInconsistent()//is the other, looking opposite way to dots
     {
-        Debug.Log("Other-Inconsistent");
         bool consistent = false;
         bool self = false;
         int dots = Random.Range(1, 4);
@@ -410,6 +473,7 @@ public class DotTaskScript : MonoBehaviour
             Dot5.SetActive(true);
             Dot6.SetActive(true);
         }
+        CheckCorrect(dots);
     }
     public void RandomTrial()
     {
