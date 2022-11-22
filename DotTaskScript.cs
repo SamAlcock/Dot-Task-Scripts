@@ -107,6 +107,7 @@ public class DotTaskScript : MonoBehaviour
         Button btn_y = YesButton.GetComponent<Button>();
         Button btn_n = NoButton.GetComponent<Button>();
 
+        // Declares which functions will run when each button is clicked
         btn_y.onClick.AddListener(YesClick);
         btn_n.onClick.AddListener(NoClick);
 
@@ -114,19 +115,13 @@ public class DotTaskScript : MonoBehaviour
 
         StartCoroutine(Trials());
     }
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
-    void YesClick()
+    void YesClick() // What to do when 'Yes' button is clicked
     {
         YesClicked = true;
         YesButton.SetActive(false);
         NoButton.SetActive(false);
     }
-    void NoClick()
+    void NoClick() // What to do when 'No' button is clicked
     {
         NoClicked = true;
         YesButton.SetActive(false);
@@ -139,13 +134,13 @@ public class DotTaskScript : MonoBehaviour
         {
             Debug.Log("Both buttons clicked, user is incorrect");
         }
-        else if(YesClicked && dots == number)
+        else if(YesClicked && dots == number) // if yes is clicked and dots displayed equals the number shown
         {
-            correct++;  
+            correct++; // Add one to correct
         }
-        else if(NoClicked && dots != number)
+        else if(NoClicked && dots != number) // if no is clicked and dots displyed doesn't equal the number shown
         {
-            correct++; 
+            correct++; // Add one to correct 
         }
         YesClicked = false;
         NoClicked = false;
@@ -153,10 +148,9 @@ public class DotTaskScript : MonoBehaviour
     }
     public IEnumerator Trials()
     {
+        // Code to show/hide fixation cross
         FixationCross.SetActive(true);
-
         yield return new WaitForSeconds(0.75f);
-
         FixationCross.SetActive(false);
 
 
@@ -172,6 +166,7 @@ public class DotTaskScript : MonoBehaviour
 
                 yield return new WaitForSeconds(2f);
 
+                // Hide dots and buttons
                 Dot1.SetActive(false);
                 Dot2.SetActive(false);
                 Dot3.SetActive(false);
@@ -182,7 +177,8 @@ public class DotTaskScript : MonoBehaviour
                 YesButton.SetActive(false);
                 NoButton.SetActive(false);
 
-                if (TrialsRan >= 1 && TrialsRan < 13)
+                // Code to decide which measure to run - trial number decides what measure is used (except RandomTrial())
+                if (TrialsRan >= 1 && TrialsRan < 13) 
                 {
                     if (TrialsRan == 1) // Temporary code for console
                     {
@@ -191,7 +187,7 @@ public class DotTaskScript : MonoBehaviour
 
                     SelfConsistent();                       
                 }
-                else if(TrialsRan >= 13 && TrialsRan < 25)
+                else if(TrialsRan >= 13 && TrialsRan < 25) 
                 {
                     if (TrialsRan == 13) // Temporary code for console
                     {
@@ -199,7 +195,7 @@ public class DotTaskScript : MonoBehaviour
                     }
                     OtherConsistent();                     
                 }
-                else if (TrialsRan >= 25 && TrialsRan < 37)
+                else if (TrialsRan >= 25 && TrialsRan < 37) 
                 {
                     if (TrialsRan == 25) // Temporary code for console
                     {
@@ -207,7 +203,7 @@ public class DotTaskScript : MonoBehaviour
                     }
                     SelfInconsistent();              
                 }
-                else if (TrialsRan >= 37 && TrialsRan < 49)
+                else if (TrialsRan >= 37 && TrialsRan < 49) 
                 {
                     if (TrialsRan == 37) // Temporary code for console
                     {
@@ -252,16 +248,17 @@ public class DotTaskScript : MonoBehaviour
 
     }
 
-    IEnumerator DisplayPerspective(bool self)
+    IEnumerator DisplayPerspective(bool self) // Displays perspective by changing text on screen
     {
-        if (self)
+        if (self) // if self boolean is true
         {
             TextPerspective.GetComponent<TextMeshPro>().text = "Self";
         }
-        else
+        else // if self isn't true then it must be false, so perspective is 'Other'
         {
             TextPerspective.GetComponent<TextMeshPro>().text = "Other";
         }
+        // Code to show/hide text
         TextPerspective.SetActive(true); 
         yield return new WaitForSeconds(0.75f);
         TextPerspective.SetActive(false);
@@ -311,22 +308,23 @@ public class DotTaskScript : MonoBehaviour
     public List<int> DotPicker(int dot_number_1, int dot_number_2, int dot_number_3, int niter) 
     {
         dots_picked.Clear();
-        List<int> picker = new () { dot_number_1, dot_number_2, dot_number_3 };
+        List<int> picker = new () { dot_number_1, dot_number_2, dot_number_3 }; // Creates a list out of the dots input into the function
         List<int> picked = new ();
 
         for(int i = 0; i < niter; i++)
         {
-            int dot = Random.Range(0, picker.Count);
-            picked.Add(picker[dot]);
-            picker.Remove(picker[dot]);
+            int dot = Random.Range(0, picker.Count); // Picks a random location in the list
+            picked.Add(picker[dot]); // Adds the picked item to the picked list
+            picker.Remove(picker[dot]); // Removes the picked item to avoid it being picked twice
         }
 
-        return picked;
+        return picked; // returns the picked list to display later
     }
 
-    public void ConDotDisplay(int niter)
+    // 'niter' sets the number of iterations for the for loop. It is set as the length of the list created in DotPicker()
+    public void ConDotDisplay(int niter) // Displays dots from list that was created in DotPicker()
     {
-        for (int i = 0; i < niter; i++)
+        for (int i = 0; i < niter; i++) // Loops through list
         {
             if (dots_picked[i] == 1)
             {
@@ -343,7 +341,7 @@ public class DotTaskScript : MonoBehaviour
         }
     }
 
-    public void InconDotDisplay(int niter)
+    public void InconDotDisplay(int niter) // Does the same as ConDotDisplay(), but for the other wall
     {
         for (int i = 0; i < niter; i++)
         {
@@ -477,7 +475,7 @@ public class DotTaskScript : MonoBehaviour
     }
     public void RandomTrial()
     {
-        int trial = Random.Range(0, 4);
+        int trial = Random.Range(0, 4); // Sets trial integer to a random number - the number picked corresponds to a certain measure
 
         if (trial == 0)
         {
